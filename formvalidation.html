@@ -1,0 +1,73 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Pemesanan Tiket</title>
+    <style>
+        .error { color: red; }
+    </style>
+</head>
+<body>
+    <h2>Form Pemesanan Tiket</h2>
+    <form id="ticketForm" onsubmit="return validateForm()">
+        <label>Nama Pelanggan:
+            <input type="text" id="nama" maxlength="30" required>
+        </label><span id="namaError" class="error"></span><br><br>
+
+        <label>Email:
+            <input type="email" id="email" required>
+        </label><span id="emailError" class="error"></span><br><br>
+
+        <label>Jam Keberangkatan:
+            <input type="time" id="jamKeberangkatan" required>
+        </label><span id="jamError" class="error"></span><br><br>
+
+        <label>Tujuan Keberangkatan:
+            <input type="text" id="tujuan" required>
+        </label><span id="tujuanError" class="error"></span><br><br>
+
+        <label>Jumlah Tiket:
+            <input type="number" id="jumlahTiket" min="1" max="10" required>
+        </label><span id="jumlahTiketError" class="error"></span><br><br>
+
+        <button type="submit">Submit</button>
+    </form>
+
+    <div id="result"></div>
+
+    <script>
+        function validateForm() {
+            let isValid = true;
+            const fields = [
+                { id: 'nama', errorId: 'namaError', validate: (value) => value && value.length <= 30, errorMsg: 'Nama wajib diisi dan maksimal 30 karakter.' },
+                { id: 'email', errorId: 'emailError', validate: (value) => /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/.test(value), errorMsg: 'Email tidak valid.' },
+                { id: 'jamKeberangkatan', errorId: 'jamError', validate: (value) => value !== '', errorMsg: 'Jam keberangkatan wajib diisi.' },
+                { id: 'tujuan', errorId: 'tujuanError', validate: (value) => value !== '', errorMsg: 'Tujuan keberangkatan wajib diisi.' },
+                { id: 'jumlahTiket', errorId: 'jumlahTiketError', validate: (value) => value >= 1 && value <= 10, errorMsg: 'Jumlah tiket harus antara 1 dan 10.' }
+            ];
+
+            fields.forEach(field => {
+                const value = document.getElementById(field.id).value;
+                document.getElementById(field.errorId).textContent = field.validate(value) ? '' : field.errorMsg;
+                isValid &= field.validate(value);
+            });
+
+            if (isValid) {
+                const result = `
+                    <h3>Data yang Anda Masukkan:</h3>
+                    <p><strong>Nama Pelanggan:</strong> ${document.getElementById('nama').value}</p>
+                    <p><strong>Email:</strong> ${document.getElementById('email').value}</p>
+                    <p><strong>Jam Keberangkatan:</strong> ${document.getElementById('jamKeberangkatan').value}</p>
+                    <p><strong>Tujuan Keberangkatan:</strong> ${document.getElementById('tujuan').value}</p>
+                    <p><strong>Jumlah Tiket:</strong> ${document.getElementById('jumlahTiket').value}</p>
+                `;
+                document.getElementById('result').innerHTML = result;
+                return false;
+            }
+            return false;
+        }
+    </script>
+</body>
+</html>
